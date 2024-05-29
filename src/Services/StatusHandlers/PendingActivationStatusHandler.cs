@@ -26,7 +26,12 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
     /// The subscription log repository.
     /// </summary>
     private readonly ISubscriptionLogRepository subscriptionLogRepository;
-
+ 
+    /// <summary>
+    /// The psa fulfillment http client.
+    /// </summary>
+    private readonly IPsaFulfillmentApiServices psaFulfillmentApiServices;
+ 
     /// <summary>
     /// The logger.
     /// </summary>
@@ -48,12 +53,14 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
         ISubscriptionLogRepository subscriptionLogRepository,
         IPlansRepository plansRepository,
         IUsersRepository usersRepository,
+        IPsaFulfillmentApiServices psaFulfillmentApiServices,
         ILogger<PendingActivationStatusHandler> logger)
         : base(subscriptionsRepository, plansRepository, usersRepository)
     {
         this.fulfillmentApiService = fulfillApiService;
         this.subscriptionLogRepository = subscriptionLogRepository;
         this.logger = logger;
+        this.psaFulfillmentApiServices = psaFulfillmentApiServices;
     }
 
     /// <summary>
@@ -73,26 +80,33 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
         {
             try
             {
-                this.logger?.LogInformation("Get attributelsit");
-
-                var subscriptionData = this.fulfillmentApiService.ActivateSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                this.logger?.LogInformation("UpdateWebJobSubscriptionStatus");
-
-                this.subscriptionsRepository.UpdateStatusForSubscription(subscriptionID, SubscriptionStatusEnumExtension.Subscribed.ToString(), true);
-
-                SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
-                {
-                    Attribute = SubscriptionLogAttributes.Status.ToString(),
-                    SubscriptionId = subscription.Id,
-                    NewValue = SubscriptionStatusEnumExtension.Subscribed.ToString(),
-                    OldValue = oldstatus,
-                    CreateBy = userdeatils.UserId,
-                    CreateDate = DateTime.Now,
-                };
-                this.subscriptionLogRepository.Save(auditLog);
-
-                this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, "Activated", SubscriptionStatusEnumExtension.Subscribed.ToString());
+                // TODO remove this logic after deployment
+                // this.logger?.LogInformation("Get attributelsit");
+ 
+                // var subscriptionData = this.fulfillmentApiService.ActivateSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
+ 
+                // this.logger?.LogInformation("UpdateWebJobSubscriptionStatus");
+ 
+                // this.subscriptionsRepository.UpdateStatusForSubscription(subscriptionID, SubscriptionStatusEnumExtension.Subscribed.ToString(), true);
+ 
+                // SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
+                // {
+                //     Attribute = SubscriptionLogAttributes.Status.ToString(),
+                //     SubscriptionId = subscription.Id,
+                //     NewValue = SubscriptionStatusEnumExtension.Subscribed.ToString(),
+                //     OldValue = oldstatus,
+                //     CreateBy = userdeatils.UserId,
+                //     CreateDate = DateTime.Now,
+                // };
+                // this.subscriptionLogRepository.Save(auditLog);
+ 
+                // this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, "Activated", SubscriptionStatusEnumExtension.Subscribed.ToString());
+                
+                // TODO uncomment the above code after deployment
+                // Send event to PSA service
+                this.logger?.LogInformation("start PSA service activation result");
+                var result = this.psaFulfillmentApiServices.ActivateDeploymentAsync(subscriptionID, subscription.AmpplanId, userdeatils.UserId.ToString()).ConfigureAwait(false).GetAwaiter().GetResult();
+                this.logger?.LogInformation("PSA service activation result: DeploymentId = {DeploymentId}, SaasPlatformLink = {SaasPlatformLink}", result.DeploymentId, result.SaasPlatformLink);
             }
             catch (Exception ex)
             {

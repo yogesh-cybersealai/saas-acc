@@ -80,6 +80,8 @@ public class HomeController : BaseController
 
     private readonly ISubscriptionStatusHandler pendingActivationStatusHandlers;
 
+    private readonly IPsaFulfillmentApiServices psaFulfillmentApiServices;
+
     private readonly ISubscriptionStatusHandler unsubscribeStatusHandlers;
 
     private readonly ISubscriptionStatusHandler notificationStatusHandlers;
@@ -120,7 +122,7 @@ public class HomeController : BaseController
     /// <param name="cloudConfigs">The cloud configs.</param>
     /// <param name="loggerFactory">The logger factory.</param>
     /// <param name="emailService">The email service.</param>
-    public HomeController(SaaSClientLogger<HomeController> logger, IFulfillmentApiService apiService, ISubscriptionsRepository subscriptionRepo, IPlansRepository planRepository, IUsersRepository userRepository, IApplicationLogRepository applicationLogRepository, ISubscriptionLogRepository subscriptionLogsRepo, IApplicationConfigRepository applicationConfigRepository, IEmailTemplateRepository emailTemplateRepository, IOffersRepository offersRepository, IPlanEventsMappingRepository planEventsMappingRepository, IOfferAttributesRepository offerAttributesRepository, IEventsRepository eventsRepository, ILoggerFactory loggerFactory, IEmailService emailService,IWebNotificationService webNotificationService)
+    public HomeController(SaaSClientLogger<HomeController> logger, IFulfillmentApiService apiService, ISubscriptionsRepository subscriptionRepo, IPlansRepository planRepository, IUsersRepository userRepository, IApplicationLogRepository applicationLogRepository, ISubscriptionLogRepository subscriptionLogsRepo, IApplicationConfigRepository applicationConfigRepository,IPsaFulfillmentApiServices psaFulfillmentApiServices, IEmailTemplateRepository emailTemplateRepository, IOffersRepository offersRepository, IPlanEventsMappingRepository planEventsMappingRepository, IOfferAttributesRepository offerAttributesRepository, IEventsRepository eventsRepository, ILoggerFactory loggerFactory, IEmailService emailService,IWebNotificationService webNotificationService)
     {
         this.apiService = apiService;
         this.subscriptionRepository = subscriptionRepo;
@@ -135,6 +137,7 @@ public class HomeController : BaseController
         this.applicationConfigService = new ApplicationConfigService(this.applicationConfigRepository);
         this.emailTemplateRepository = emailTemplateRepository;
         this.planEventsMappingRepository = planEventsMappingRepository;
+        this.psaFulfillmentApiServices = psaFulfillmentApiServices;
         this.offerAttributesRepository = offerAttributesRepository;
         this.logger = logger;
         this.offersRepository = offersRepository;
@@ -150,6 +153,7 @@ public class HomeController : BaseController
             subscriptionLogsRepo,
             planRepository,
             userRepository,
+            psaFulfillmentApiServices,
             loggerFactory.CreateLogger<PendingActivationStatusHandler>());
 
         this.pendingFulfillmentStatusHandlers = new PendingFulfillmentStatusHandler(

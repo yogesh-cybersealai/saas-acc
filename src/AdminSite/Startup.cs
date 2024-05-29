@@ -125,9 +125,9 @@ public class Startup
             .AddSingleton<IFulfillmentApiService>(new FulfillmentApiService(new MarketplaceSaaSClient(fulfillmentBaseApi, creds), config, new FulfillmentApiClientLogger()))
             .AddSingleton<IMeteredBillingApiService>(new MeteredBillingApiService(new MarketplaceMeteringClient(creds), config, new SaaSClientLogger<MeteredBillingApiService>()))
             .AddSingleton<SaaSApiClientConfiguration>(config)
-            .AddSingleton<KnownUsersModel>(knownUsers);
+            .AddSingleton<KnownUsersModel>(knownUsers)
+            .AddHttpClient<IPsaFulfillmentApiServices, PsaFulfillmentApiServices>();
             
-
 
 
         services

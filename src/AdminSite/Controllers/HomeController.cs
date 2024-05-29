@@ -68,6 +68,8 @@ public class HomeController : BaseController
 
     private readonly IFulfillmentApiService fulfillApiService;
 
+    private readonly IPsaFulfillmentApiServices psaFulfillmentApiServices;
+
     private readonly IApplicationLogRepository applicationLogRepository;
 
     private readonly IMeteredBillingApiService billingApiService;
@@ -132,7 +134,7 @@ public class HomeController : BaseController
     /// <param name="offersRepository">The offers repository.</param>
     /// <param name="offersAttributeRepository">The offers attribute repository.</param>
     public HomeController(
-        IUsersRepository usersRepository, IMeteredBillingApiService billingApiService,  ISubscriptionsRepository subscriptionRepo, IPlansRepository planRepository, ISubscriptionUsageLogsRepository subscriptionUsageLogsRepository, IMeteredDimensionsRepository dimensionsRepository, ISubscriptionLogRepository subscriptionLogsRepo, IApplicationConfigRepository applicationConfigRepository, IUsersRepository userRepository, IFulfillmentApiService fulfillApiService, IApplicationLogRepository applicationLogRepository, IEmailTemplateRepository emailTemplateRepository, IPlanEventsMappingRepository planEventsMappingRepository, IEventsRepository eventsRepository, SaaSApiClientConfiguration saaSApiClientConfiguration, ILoggerFactory loggerFactory, IEmailService emailService, IOffersRepository offersRepository, IOfferAttributesRepository offersAttributeRepository, SaaSClientLogger<HomeController> logger) : base(applicationConfigRepository)
+        IUsersRepository usersRepository, IMeteredBillingApiService billingApiService, ISubscriptionsRepository subscriptionRepo, IPlansRepository planRepository, ISubscriptionUsageLogsRepository subscriptionUsageLogsRepository, IMeteredDimensionsRepository dimensionsRepository, ISubscriptionLogRepository subscriptionLogsRepo, IApplicationConfigRepository applicationConfigRepository, IUsersRepository userRepository, IFulfillmentApiService fulfillApiService, IPsaFulfillmentApiServices psaFulfillmentApiServices, IApplicationLogRepository applicationLogRepository, IEmailTemplateRepository emailTemplateRepository, IPlanEventsMappingRepository planEventsMappingRepository, IEventsRepository eventsRepository, SaaSApiClientConfiguration saaSApiClientConfiguration, ILoggerFactory loggerFactory, IEmailService emailService, IOffersRepository offersRepository, IOfferAttributesRepository offersAttributeRepository, SaaSClientLogger<HomeController> logger) : base(applicationConfigRepository)
     {
         this.billingApiService = billingApiService;
         this.subscriptionRepo = subscriptionRepo;
@@ -146,6 +148,7 @@ public class HomeController : BaseController
         this.userRepository = userRepository;
         this.userService = new UserService(userRepository);
         this.fulfillApiService = fulfillApiService;
+        this.psaFulfillmentApiServices = psaFulfillmentApiServices;
         this.applicationLogRepository = applicationLogRepository;
         this.applicationLogService = new ApplicationLogService(this.applicationLogRepository);
         this.subscriptionRepository = this.subscriptionRepo;
@@ -165,6 +168,7 @@ public class HomeController : BaseController
             subscriptionLogsRepo,
             planRepository,
             userRepository,
+            psaFulfillmentApiServices,
             loggerFactory.CreateLogger<PendingActivationStatusHandler>());
 
         this.pendingFulfillmentStatusHandlers = new PendingFulfillmentStatusHandler(
@@ -225,6 +229,16 @@ public class HomeController : BaseController
     /// Subscriptionses this instance.
     /// </summary>
     /// <returns> The <see cref="IActionResult" />.</returns>
+    /// // TODO remove this fucntion after deployment
+    private DateTime ValidateDate(DateTime date)
+    {
+        if (date.Year == 2024)
+        {
+            return date;
+        }
+        return DateTime.Today;
+    }
+
     public IActionResult Subscriptions()
     {
         this.logger.Info("Home Controller / Subscriptions ");
@@ -240,6 +254,11 @@ public class HomeController : BaseController
                 var allPlans = this.planRepository.Get().ToList();
                 foreach (var subscription in allSubscriptionDetails)
                 {
+                    // TODO remove this logic after deployment
+
+                    subscription.StartDate = ValidateDate(subscription.StartDate.GetValueOrDefault());
+                    subscription.EndDate = ValidateDate(subscription.EndDate.GetValueOrDefault());
+
                     Plans planDetail = allPlans.FirstOrDefault(p => p.PlanId == subscription.AmpplanId);
                     SubscriptionResultExtension subscriptionDetailExtension = this.subscriptionService.PrepareSubscriptionResponse(subscription, planDetail);
                     subscriptionDetailExtension.IsPerUserPlan = planDetail.IsPerUser.HasValue ? planDetail.IsPerUser.Value : false;
@@ -396,21 +415,22 @@ public class HomeController : BaseController
             SubscriptionProcessQueueModel queueObject = new SubscriptionProcessQueueModel();
             if (operation == "Activate")
             {
-                if (oldValue.SubscriptionStatus.ToString() != SubscriptionStatusEnumExtension.PendingActivation.ToString())
-                {
-                    this.subscriptionRepository.UpdateStatusForSubscription(subscriptionId, SubscriptionStatusEnumExtension.PendingActivation.ToString(), true);
+                // TODO uncomment the above code after deployment
+                // if (oldValue.SubscriptionStatus.ToString() != SubscriptionStatusEnumExtension.PendingActivation.ToString())
+                // {
+                //     this.subscriptionRepository.UpdateStatusForSubscription(subscriptionId, SubscriptionStatusEnumExtension.PendingActivation.ToString(), true);
 
-                    SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
-                    {
-                        Attribute = Convert.ToString(SubscriptionLogAttributes.Status),
-                        SubscriptionId = oldValue.SubscribeId,
-                        NewValue = SubscriptionStatusEnumExtension.PendingActivation.ToString(),
-                        OldValue = oldValue.SubscriptionStatus.ToString(),
-                        CreateBy = userDetails.UserId,
-                        CreateDate = DateTime.Now,
-                    };
-                    this.subscriptionLogRepository.Save(auditLog);
-                }
+                //     SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
+                //     {
+                //         Attribute = Convert.ToString(SubscriptionLogAttributes.Status),
+                //         SubscriptionId = oldValue.SubscribeId,
+                //         NewValue = SubscriptionStatusEnumExtension.PendingActivation.ToString(),
+                //         OldValue = oldValue.SubscriptionStatus.ToString(),
+                //         CreateBy = userDetails.UserId,
+                //         CreateDate = DateTime.Now,
+                //     };
+                //     this.subscriptionLogRepository.Save(auditLog);
+                // }
 
                 this.pendingActivationStatusHandlers.Process(subscriptionId);
             }
@@ -821,7 +841,7 @@ public class HomeController : BaseController
             }
             catch (Exception ex)
             {
-                this.logger.LogError($"Message:{ex.Message} :: {ex.InnerException}"); 
+                this.logger.LogError($"Message:{ex.Message} :: {ex.InnerException}");
                 return this.View("Error", ex);
             }
         }

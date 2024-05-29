@@ -146,6 +146,16 @@ public class SubscriptionService
     /// </summary>
     /// <param name="subscription">The subscription.</param>
     /// <returns> Subscription.</returns>
+    // TODO remove this logic after deployment
+    private DateTime ValidateDate(DateTime date)
+    {
+        if (date.Year == 2024)
+        {
+            return date;
+        }
+        return DateTime.Today;
+    }
+
     public SubscriptionResultExtension PrepareSubscriptionResponse(Subscriptions subscription, Plans existingPlanDetail = null)
     {
         if(existingPlanDetail == null)
@@ -161,8 +171,8 @@ public class SubscriptionService
             OfferId = subscription.AmpOfferId,
             Term = new TermResult
             {
-                StartDate = subscription.StartDate.GetValueOrDefault(),
-                EndDate = subscription.EndDate.GetValueOrDefault(),
+                StartDate = ValidateDate(subscription.StartDate.GetValueOrDefault()),
+                EndDate = ValidateDate(subscription.EndDate.GetValueOrDefault()),
             },
             Quantity = subscription.Ampquantity,
             Name = subscription.Name,
