@@ -31,6 +31,8 @@ public partial class Subscriptions
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 
+    public string DeploymentStatus { get; set; }
+    public string DeploymentId { get; set; }
 
     public virtual Users User { get; set; }
     public virtual ICollection<MeteredAuditLogs> MeteredAuditLogs { get; set; }

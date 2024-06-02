@@ -454,6 +454,15 @@ public partial class SaasKitContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Subscript__UserI__656C112C");
 
+            // New fields
+            entity.Property(e => e.DeploymentId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+            entity.Property(e => e.DeploymentStatus)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
             entity.HasMany(e => e.MeteredPlanSchedulerManagements)
                 .WithOne(e => e.Subscriptions)
                 .HasForeignKey(e => e.SubscriptionId);

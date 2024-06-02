@@ -122,6 +122,20 @@
                             @Html.DisplayFor(model => model.Beneficiary.ObjectId)
                             @Html.HiddenFor(model => model.Beneficiary.ObjectId)
                         </dd>
+                        <dt class="col-sm-3 p-2 p10">
+                            @Html.DisplayName("Deployment ID ")
+                        </dt>
+                        <dd class="col-sm-9 p-2 p10">
+                            @Html.DisplayFor(model => model.DeploymentId)
+                            @Html.HiddenFor(model => model.DeploymentId)
+                        </dd>
+                        <dt class="col-sm-3 p-2 p10">
+                            @Html.DisplayName("Deployment Status")
+                        </dt>
+                        <dd class="col-sm-9 p-2 p10">
+                            @Html.DisplayFor(model => model.DeploymentStatus)
+                            @Html.HiddenFor(model => model.DeploymentStatus)
+                        </dd>
                     </dl>
                 </div>
                 <div style="text-align: right !important;">

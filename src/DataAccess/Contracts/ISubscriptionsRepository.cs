@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marketplace.SaaS.Accelerator.DataAccess.Entities;
+// using Marketplace.SaaS.Accelerator.
 
 namespace Marketplace.SaaS.Accelerator.DataAccess.Contracts;
 
@@ -36,6 +37,8 @@ public interface ISubscriptionsRepository : IDisposable, IBaseRepository<Subscri
     /// <param name="subscriptionStatus">The subscription status.</param>
     /// <param name="isActive">if set to <c>true</c> [is active].</param>
     void UpdateStatusForSubscription(Guid subscriptionId, string subscriptionStatus, bool isActive);
+
+    void UpdateDeploymentStatusForSubscription(Guid subscriptionId, bool isDeployed, string DeploymentStatus, string DeploymentId);
 
     /// <summary>
     /// Updates the plan for subscription.

@@ -179,6 +179,17 @@ public class SubscriptionResult : SaaSApiResult
     /// </value>
     public int SubscribeId { get; set; }
 
+    // [JsonPropertyName("deploymentStatus")]
+    // [DisplayName("Deployment Status")]
+    // [JsonConverter(typeof(JsonStringEnumConverter))]
+    public string DeploymentStatus { get; set; }
+    // public DeploymentStatusEnum DeploymentStatus { get; set; }
+
+    /// <summary>
+    /// Gets or sets the DeploymentId.
+    /// </summary>
+    public string DeploymentId { get; set; }
+
     /// <summary>
     /// Gets or sets the selected plan identifier.
     /// </summary>

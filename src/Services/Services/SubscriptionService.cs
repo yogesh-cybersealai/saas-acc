@@ -179,6 +179,8 @@ public class SubscriptionService
             SubscriptionStatus = this.GetSubscriptionStatus(subscription.SubscriptionStatus),
             IsActiveSubscription = subscription.IsActive ?? false,
             CustomerEmailAddress = subscription.User?.EmailAddress,
+            DeploymentStatus = subscription.DeploymentStatus,
+            DeploymentId = subscription.DeploymentId,
             CustomerName = subscription.User?.FullName,
             IsMeteringSupported = existingPlanDetail != null ? (existingPlanDetail.IsmeteringSupported ?? false) : false,
         };

@@ -48,7 +48,7 @@ public class SubscriptionsRepository : ISubscriptionsRepository
             existingSubscriptions.Ampquantity = subscriptionDetails.Ampquantity;
             existingSubscriptions.AmpOfferId = subscriptionDetails.AmpOfferId;
             existingSubscriptions.Term = subscriptionDetails.Term;
-            existingSubscriptions.StartDate = subscriptionDetails.StartDate; 
+            existingSubscriptions.StartDate = subscriptionDetails.StartDate;
             existingSubscriptions.EndDate = subscriptionDetails.EndDate;
 
             this.context.Subscriptions.Update(existingSubscriptions);
@@ -78,6 +78,27 @@ public class SubscriptionsRepository : ISubscriptionsRepository
             existingSubscription.IsActive = isActive;
             existingSubscription.SubscriptionStatus = subscriptionStatus;
             this.context.Subscriptions.Update(existingSubscription);
+        }
+
+        this.context.SaveChanges();
+    }
+
+    public void UpdateDeploymentStatusForSubscription(Guid subscriptionId, bool isDeployed, string DeploymentStatus, string DeploymentId = null)
+    {
+        var existingSubscription = this.context.Subscriptions.Where(s => s.AmpsubscriptionId == subscriptionId).FirstOrDefault();
+        if (existingSubscription != null)
+        {
+            if (isDeployed == true)
+            {
+                existingSubscription.DeploymentStatus = DeploymentStatus;
+                existingSubscription.DeploymentId = DeploymentId;
+                this.context.Subscriptions.Update(existingSubscription);
+            }
+            else
+            {
+                existingSubscription.DeploymentStatus = DeploymentStatus;
+                this.context.Subscriptions.Update(existingSubscription);
+            }
         }
 
         this.context.SaveChanges();

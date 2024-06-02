@@ -12,9 +12,9 @@ namespace Marketplace.SaaS.Accelerator.Services.Models;
 public class PsaDeploymentResult
 {
 
-    [JsonPropertyName("deploymentId")]
+    [JsonPropertyName("DeploymentId")]
     public string DeploymentId { get; set; }
 
-    [JsonPropertyName("saasPlatformLink")]
-    public string SaasPlatformLink { get; set; }
+    [JsonPropertyName("DeploymentStatus")]
+    public string DeploymentStatus { get; set; }
 }

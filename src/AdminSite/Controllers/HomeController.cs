@@ -339,6 +339,9 @@ public class HomeController : BaseController
             this.logger.Info(HttpUtility.HtmlEncode($"User authenticate successfully & GetSubscriptionByIdAsync  SubscriptionID :{subscriptionId}"));
             this.TempData["ShowWelcomeScreen"] = false;
             var oldValue = this.subscriptionService.GetSubscriptionsBySubscriptionId(subscriptionId);
+
+            this.logger.Info($"qqqq {oldValue.DeploymentId} {oldValue.DeploymentStatus}");
+
             var serializedParent = JsonSerializer.Serialize(oldValue);
             subscriptionDetail = JsonSerializer.Deserialize<SubscriptionResultExtension>(serializedParent);
             this.logger.Info(HttpUtility.HtmlEncode($"serializedParent :{serializedParent}"));
@@ -353,7 +356,7 @@ public class HomeController : BaseController
             var detailsFromAPI = await this.fulfillApiService.GetSubscriptionByIdAsync(subscriptionId).ConfigureAwait(false);
             subscriptionDetail.Beneficiary = detailsFromAPI.Beneficiary;
         }
-
+        this.logger.Info($"xyz {subscriptionDetail.DeploymentId} {subscriptionDetail.DeploymentStatus} {subscriptionDetail.PlanId} {subscriptionDetail.SubscribeId} {subscriptionDetail.SubscriptionStatus} {subscriptionDetail.CustomerEmailAddress} {subscriptionDetail.CustomerName} {subscriptionDetail.ShowWelcomeScreen} {subscriptionDetail.Purchaser} {subscriptionDetail.Beneficiary} {subscriptionDetail.Term} {subscriptionDetail.SelectedPlanId} {subscriptionDetail.PlanList}");
         return this.View(subscriptionDetail);
     }
 
