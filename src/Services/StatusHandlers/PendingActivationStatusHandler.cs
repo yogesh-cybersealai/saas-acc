@@ -89,7 +89,7 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
                 // Update the deployment status to Subscribed.
                 this.subscriptionsRepository.UpdateDeploymentStatusForSubscription(subscriptionID, true, DeploymentStatusEnum.Active.ToString(), result.DeploymentId);
             }
-            // TODO remove this logic after deployment
+            // TODOx remove this logic after deployment
             // this.logger?.LogInformation("Get attributelsit");
             catch (Exception ex)
             {
@@ -117,23 +117,23 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
 
 
                 this.logger?.LogInformation("excuting fulfillmentapi for subscription activation");
-                // var subscriptionData = this.fulfillmentApiService.ActivateSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
-                // this.logger?.LogInformation("UpdateWebJobSubscriptionStatus");
-                // this.subscriptionsRepository.UpdateStatusForSubscription(subscriptionID, SubscriptionStatusEnumExtension.Subscribed.ToString(), true);
-                // SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
-                // {
-                //     Attribute = SubscriptionLogAttributes.Status.ToString(),
-                //     SubscriptionId = subscription.Id,
-                //     NewValue = SubscriptionStatusEnumExtension.Subscribed.ToString(),
-                //     OldValue = oldstatus,
-                //     CreateBy = userdeatils.UserId,
-                //     CreateDate = DateTime.Now,
-                // };
-                // this.subscriptionLogRepository.Save(auditLog);
+                var subscriptionData = this.fulfillmentApiService.ActivateSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
+                this.logger?.LogInformation("UpdateWebJobSubscriptionStatus");
+                this.subscriptionsRepository.UpdateStatusForSubscription(subscriptionID, SubscriptionStatusEnumExtension.Subscribed.ToString(), true);
+                SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
+                {
+                    Attribute = SubscriptionLogAttributes.Status.ToString(),
+                    SubscriptionId = subscription.Id,
+                    NewValue = SubscriptionStatusEnumExtension.Subscribed.ToString(),
+                    OldValue = oldstatus,
+                    CreateBy = userdeatils.UserId,
+                    CreateDate = DateTime.Now,
+                };
+                this.subscriptionLogRepository.Save(auditLog);
 
-                // this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, "Activated", SubscriptionStatusEnumExtension.Subscribed.ToString());
+                this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, "Activated", SubscriptionStatusEnumExtension.Subscribed.ToString());
 
-                // TODO uncomment the above code after deployment
+                // TODOx uncomment the above code after deployment
 
 
             }

@@ -229,15 +229,16 @@ public class HomeController : BaseController
     /// Subscriptionses this instance.
     /// </summary>
     /// <returns> The <see cref="IActionResult" />.</returns>
-    /// // TODO remove this fucntion after deployment
-    private DateTime ValidateDate(DateTime date)
-    {
-        if (date.Year == 2024)
-        {
-            return date;
-        }
-        return DateTime.Today;
-    }
+    /// // TODOx remove this fucntion after deployment
+
+    // private DateTime ValidateDate(DateTime date)
+    // {
+    //     if (date.Year == 2024)
+    //     {
+    //         return date;
+    //     }
+    //     return DateTime.Today;
+    // }
 
     public IActionResult Subscriptions()
     {
@@ -254,10 +255,10 @@ public class HomeController : BaseController
                 var allPlans = this.planRepository.Get().ToList();
                 foreach (var subscription in allSubscriptionDetails)
                 {
-                    // TODO remove this logic after deployment
+                    // TODOx remove this logic after deployment
 
-                    subscription.StartDate = ValidateDate(subscription.StartDate.GetValueOrDefault());
-                    subscription.EndDate = ValidateDate(subscription.EndDate.GetValueOrDefault());
+                    // subscription.StartDate = ValidateDate(subscription.StartDate.GetValueOrDefault());
+                    // subscription.EndDate = ValidateDate(subscription.EndDate.GetValueOrDefault());
 
                     Plans planDetail = allPlans.FirstOrDefault(p => p.PlanId == subscription.AmpplanId);
                     SubscriptionResultExtension subscriptionDetailExtension = this.subscriptionService.PrepareSubscriptionResponse(subscription, planDetail);
@@ -418,22 +419,22 @@ public class HomeController : BaseController
             SubscriptionProcessQueueModel queueObject = new SubscriptionProcessQueueModel();
             if (operation == "Activate")
             {
-                // TODO uncomment the above code after deployment
-                // if (oldValue.SubscriptionStatus.ToString() != SubscriptionStatusEnumExtension.PendingActivation.ToString())
-                // {
-                //     this.subscriptionRepository.UpdateStatusForSubscription(subscriptionId, SubscriptionStatusEnumExtension.PendingActivation.ToString(), true);
+                // TODOx uncomment the above code after deployment
+                if (oldValue.SubscriptionStatus.ToString() != SubscriptionStatusEnumExtension.PendingActivation.ToString())
+                {
+                    this.subscriptionRepository.UpdateStatusForSubscription(subscriptionId, SubscriptionStatusEnumExtension.PendingActivation.ToString(), true);
 
-                //     SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
-                //     {
-                //         Attribute = Convert.ToString(SubscriptionLogAttributes.Status),
-                //         SubscriptionId = oldValue.SubscribeId,
-                //         NewValue = SubscriptionStatusEnumExtension.PendingActivation.ToString(),
-                //         OldValue = oldValue.SubscriptionStatus.ToString(),
-                //         CreateBy = userDetails.UserId,
-                //         CreateDate = DateTime.Now,
-                //     };
-                //     this.subscriptionLogRepository.Save(auditLog);
-                // }
+                    SubscriptionAuditLogs auditLog = new SubscriptionAuditLogs()
+                    {
+                        Attribute = Convert.ToString(SubscriptionLogAttributes.Status),
+                        SubscriptionId = oldValue.SubscribeId,
+                        NewValue = SubscriptionStatusEnumExtension.PendingActivation.ToString(),
+                        OldValue = oldValue.SubscriptionStatus.ToString(),
+                        CreateBy = userDetails.UserId,
+                        CreateDate = DateTime.Now,
+                    };
+                    this.subscriptionLogRepository.Save(auditLog);
+                }
 
                 this.pendingActivationStatusHandlers.Process(subscriptionId);
             }
