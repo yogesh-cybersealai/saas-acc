@@ -16,5 +16,6 @@ namespace Marketplace.SaaS.Accelerator.Services.Contracts;
 public interface IPsaFulfillmentApiServices
 {
    
-    Task<PsaDeploymentResult> ActivateDeploymentAsync(Guid subscriptionId, string subscriptionPlanID, string userId);
+    Task<PsaDeploymentResult> ActivateDeploymentAsync(Guid subscriptionId, string subscriptionPlanID, string userId, string SubscriptionStatus, string AmpOfferId, bool? IsActive, string CreateBy, string CreateDate, string ModifyDate, string Name, string Ampquantity, string PurchaserEmail, string PurchaserTenantId, string Term, string StartDate, string EndDate, string DeploymentStatus, string DeploymentId);
+
 }

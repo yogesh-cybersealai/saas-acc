@@ -70,7 +70,8 @@ public class SubscriptionService
             AmpOfferId = subscriptionDetail.OfferId,
             Term = subscriptionDetail.Term.TermUnit.ToString(),
             StartDate = subscriptionDetail.Term.StartDate.ToUniversalTime().DateTime,
-            EndDate = subscriptionDetail.Term.EndDate.ToUniversalTime().DateTime
+            EndDate = subscriptionDetail.Term.EndDate.ToUniversalTime().DateTime,
+            DeploymentStatus = DeploymentStatusEnum.PendingActivation.ToString(),
         };
         return this.subscriptionRepository.Save(newSubscription);
     }

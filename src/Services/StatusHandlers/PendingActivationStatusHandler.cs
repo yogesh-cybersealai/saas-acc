@@ -81,8 +81,9 @@ public class PendingActivationStatusHandler : AbstractSubscriptionStatusHandler
             try
             {
                 // Send event to PSA service
+
                 this.logger?.LogInformation("start PSA service activation result");
-                var result = this.psaFulfillmentApiServices.ActivateDeploymentAsync(subscriptionID, subscription.AmpplanId, userdeatils.UserId.ToString()).ConfigureAwait(false).GetAwaiter().GetResult();
+                var result = this.psaFulfillmentApiServices.ActivateDeploymentAsync(subscriptionID, subscription.AmpplanId, userdeatils.UserId.ToString(), subscription.SubscriptionStatus, subscription.AmpOfferId, subscription.IsActive, subscription.CreateBy.ToString(), subscription.CreateDate.ToString(), subscription.ModifyDate.ToString(), subscription.Name, subscription.Ampquantity.ToString(), subscription.PurchaserEmail, subscription.PurchaserTenantId.ToString(), subscription.Term, subscription.StartDate.ToString(), subscription.EndDate.ToString(), subscription.DeploymentStatus, subscription.DeploymentId).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 this.logger?.LogInformation("PSA service activation result: DeploymentId = {DeploymentId}, SaasPlatformLink = {DeploymentStatus}", result.DeploymentId, result.DeploymentStatus);
 

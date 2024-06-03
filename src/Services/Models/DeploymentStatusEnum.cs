@@ -8,6 +8,10 @@ namespace Marketplace.SaaS.Accelerator.Services.Models;
 public enum DeploymentStatusEnum
 {
     /// <summary>
+    /// Pending Activation
+    /// </summary>
+    PendingActivation,
+    /// <summary>
     /// The pending fulfillment start
     /// </summary>
     Active,

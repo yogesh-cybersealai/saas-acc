@@ -20,14 +20,30 @@ public class PsaFulfillmentApiServices : IPsaFulfillmentApiServices
         _logger = logger;
     }
 
-    public async Task<PsaDeploymentResult> ActivateDeploymentAsync(Guid subscriptionId, string subscriptionPlanID, string userId)
+    public async Task<PsaDeploymentResult> ActivateDeploymentAsync(Guid subscriptionId, string subscriptionPlanID, string userId, string SubscriptionStatus, string AmpOfferId, bool? IsActive, string CreateBy, string CreateDate, string ModifyDate, string Name, string Ampquantity, string PurchaserEmail, string PurchaserTenantId, string Term, string StartDate, string EndDate, string DeploymentStatus, string DeploymentId)
         {
             _logger.LogInformation("Activating deployment for subscription ID: {SubscriptionId}", subscriptionId);
             var subscription = new
             {
                 SubscriptionId = subscriptionId,
                 SubscriptionPlanID = subscriptionPlanID,
-                UserId = userId
+                UserId = userId,
+                SubscriptionStatus = SubscriptionStatus,
+                AmpOfferId = AmpOfferId,
+                IsActive = IsActive,
+                CreateBy = CreateBy,
+                CreateDate = CreateDate,
+                ModifyDate = ModifyDate,
+                Name = Name,
+                Ampquantity = Ampquantity,
+                PurchaserEmail = PurchaserEmail,
+                PurchaserTenantId = PurchaserTenantId,
+                Term = Term,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                DeploymentStatus = DeploymentStatus,
+                DeploymentId = DeploymentId
+
             };
             
             var json = JsonSerializer.Serialize(subscription);
