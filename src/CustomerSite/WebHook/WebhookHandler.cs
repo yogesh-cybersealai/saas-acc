@@ -337,7 +337,7 @@ public class WebHookHandler : IWebhookHandler
                 Attribute = Convert.ToString(SubscriptionLogAttributes.Status),
                 SubscriptionId = oldValue.SubscribeId,
                 NewValue = Convert.ToString(SubscriptionStatusEnum.Unsubscribed),
-                OldValue = Convert.ToString(oldValue.SubscriptionStatus),
+                OldValue = Convert.ToString(oldValue.SubscriptionStatus),   
                 CreateBy = null,
                 CreateDate = DateTime.Now,
             };
