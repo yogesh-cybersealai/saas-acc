@@ -52,7 +52,7 @@ public class PsaFulfillmentApiServices : IPsaFulfillmentApiServices
             try
             {
                 _logger.LogInformation("Sending subscription data to PSA service for subscription ID: {SubscriptionId}", subscriptionId);
-                var response = await _httpClient.PostAsync("https://demo.cybersealai.com/backend/marketplace/webhook", content);
+                var response = await _httpClient.PostAsync("https://20.244.93.145/backend/marketplace/webhook", content);
 
                 response.EnsureSuccessStatusCode();
 
