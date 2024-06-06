@@ -81,6 +81,14 @@
                             @Html.DisplayFor(model => model.Purchaser.TenantId)
                             @Html.HiddenFor(model => model.Purchaser.TenantId)
                         </dd>
+                        
+                        <dt class="col-sm-3 p-2 p10">
+                            @Html.DisplayName("Deployment Status ")
+                        </dt>
+                        <dd class="col-sm-9 p-2 p10">
+                            @Html.DisplayFor(model => model.DeploymentStatus)
+                            @Html.HiddenFor(model => model.DeploymentStatus)
+                        </dd>
 
                         @if (Model.SubscriptionParameters != null && Model.SubscriptionParameters.Count() > 0)
                         {

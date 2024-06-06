@@ -30,6 +30,7 @@
                                         <th>Plan</th>
                                         <th>Quantity</th>
                                         <th>Status</th>
+                                        <th>Deployment Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -56,6 +57,7 @@
                                                 }
                                             </td>
                                             <td class="text-left">@subscription.SubscriptionStatus</td>
+                                            <td class="text-left">@subscription.DeploymentStatus</td>
                                             <td class="text-left  cm-ellipsis">
                                                 <div class="nav-item dropdown">
                                                     <a class="nav-link dropdown cm-link-button" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
@@ -65,11 +67,12 @@
                                                             <a class="dropdown-item cm-dropdown-option" asp-action="ViewSubscription" asp-route-subscriptionId="@Model.Subscriptions[i].Id" asp-route-planId="@Model.Subscriptions[i].PlanId" asp-route-operation="Deactivate">Unsubscribe</a>
                                                             @if (subscription.AcceptSubscriptionUpdates == true)
                                                             {
-                                                                <a class="dropdown-item cm-dropdown-option" onclick="ViewSubscriptionDetail('@Model.Subscriptions[i].Id')" data-bs-toggle="modal" data-bs-target="#myModal">Change Plan</a>
+                                                                @* TODOx if you want to add a new plan, you can uncomment the below code *@
+                                                                @* <a class="dropdown-item cm-dropdown-option" onclick="ViewSubscriptionDetail('@Model.Subscriptions[i].Id')" data-bs-toggle="modal" data-bs-target="#myModal">Change Plan</a>
                                                                 @if (subscription.IsPerUserPlan)
                                                                 {
                                                                     <a class="dropdown-item cm-dropdown-option" onclick="ViewSubscriptionQuantityDetail('@Model.Subscriptions[i].Id')" data-bs-toggle="modal"  data-bs-target="#myModal">Change Quantity</a>
-                                                                }                                                      
+                                                                }                                                       *@
                                                                 <a class="dropdown-item cm-dropdown-option" target="_blank" href="@Model.SaaSAppUrl" title="Click here to go to SaaS App">SaasApp</a>
                                                             }
                                                         }
